@@ -1,0 +1,5 @@
+.idea
+.vs
+Backend/bin
+Backend/obj
+Backend/Migrations

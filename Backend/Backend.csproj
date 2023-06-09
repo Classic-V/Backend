@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Utils\Models\Jail\**" />
+    <EmbeddedResource Remove="Utils\Models\Jail\**" />
+    <None Remove="Utils\Models\Jail\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AltV.Net.Async" Version="14.0.1" />
+    <PackageReference Include="Autofac" Version="7.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Discord.Net" Version="3.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Ammunation\Interface\" />
+    <Folder Include="Controllers\Bank\Interface\" />
+    <Folder Include="Controllers\ClothesShopItems\Interface\" />
+    <Folder Include="Controllers\House\Interface\" />
+    <Folder Include="Controllers\Jail\Interface\" />
+    <Folder Include="Controllers\Outfit\Interface\" />
+    <Folder Include="Controllers\PostJob\Interface\" />
+    <Folder Include="Controllers\TrainingStation\Interface\" />
+    <Folder Include="Controllers\Wardrobe\Interface\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Modules\Chat\Dev\" />
+    <Folder Include="Modules\ClothesShop\" />
+    <Folder Include="Modules\Bank\" />
+    <Folder Include="Modules\ClothingMenu\" />
+    <Folder Include="Modules\Jail\" />
+    <Folder Include="Modules\Animation\" />
+    <Folder Include="Modules\AnimationMenu\" />
+    <Folder Include="Modules\Ammunation\" />
+    <Folder Include="Modules\TrainingStation\" />
+    <Folder Include="Modules\Wardrobe\" />
+    <Folder Include="Services\Ammunation\Interface\" />
+    <Folder Include="Services\Animation\Interface\" />
+    <Folder Include="Services\Bank\Interface\" />
+    <Folder Include="Services\ClothesShopItems\Interface\" />
+    <Folder Include="Services\ClothesShop\Interface\" />
+    <Folder Include="Services\House\Interface\" />
+    <Folder Include="Services\Jail\Interface\" />
+    <Folder Include="Services\PostJob\Interface\" />
+    <Folder Include="Services\Wardrobe\Interface\" />
+    <Folder Include="Utils\Models\Bank\" />
+    <Folder Include="Utils\Models\House\" />
+    <Folder Include="Utils\Models\Animation\" />
+    <Folder Include="Utils\Models\PostJob\" />
+  </ItemGroup>
+
+</Project>

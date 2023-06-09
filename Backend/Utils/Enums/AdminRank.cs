@@ -1,0 +1,18 @@
+﻿namespace Backend.Utils.Enums
+{
+	public enum AdminRank
+	{
+		PLAYER,
+
+		GUIDE,
+		GAMEDESIGN,
+		ENTWICKLER,
+
+		SUPPORTER,
+		MODERATOR,
+		ADMINISTRATOR,
+		SUPERADMINISTRATOR,
+		MANAGER,
+		PROJEKTLEITER
+	}
+}
