@@ -103,7 +103,7 @@ namespace Backend.Modules.Chat.Public.Admin
 
 			acc.Name = newName;
 
-			var target = ClPlayer.All.FirstOrDefault(x => x.DbModel != null && x.Name.ToLower() == targetName.ToLower());
+			var target = ClPlayer.All.FirstOrDefault(x => x.Name.ToLower() == targetName.ToLower());
 			if (target == null)
 			{
 				await _accountService.UpdateAccount(acc);
@@ -132,6 +132,8 @@ namespace Backend.Modules.Chat.Public.Admin
 			acc.Inventory.Slots = 8;
 			acc.Inventory.MaxWeight = 45f;
 			
+			await _accountService.UpdateAccount(acc);
+			
 			await player.Notify("Administration", "Du hast das Inventar von " + acc.Name + " geleert!", NotificationType.SUCCESS);
 		}
 		
@@ -148,7 +150,7 @@ namespace Backend.Modules.Chat.Public.Admin
 
 			acc.Loadout = new List<LoadoutModel>();
 			
-			var target = ClPlayer.All.FirstOrDefault(x => x.DbModel != null && x.Name.ToLower() == targetName.ToLower());
+			var target = ClPlayer.All.FirstOrDefault(x => x.Name.ToLower() == targetName.ToLower());
 			if (target != null)
 			{
 				target.RemoveAllWeapons();
