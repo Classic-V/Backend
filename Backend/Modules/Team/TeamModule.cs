@@ -53,9 +53,17 @@ namespace Backend.Modules.Team
 
 		private void AcceptInvite(ClPlayer player, string eventKey, int team)
 		{
-			if (player.DbModel == null || team < 1) return;
+			if (player.DbModel == null || team <= 1) return;
 
-			player.SetTeam(team, 0, false, false, false);
+			player.DbModel.Team = team;
+			player.DbModel.TeamRank = 0;
+			player.DbModel.TeamAdmin = false;
+			player.DbModel.TeamBankPermission = false;
+			player.DbModel.TeamStoragePermission = false;
+			player.DbModel.TeamJoinDate = DateTime.Now;
+			
+			player.SetTeam(team);
+			
 			foreach(var target in ClPlayer.All)
 			{
 				if(target.DbModel == null || target.DbModel.Team != team) continue;
@@ -178,7 +186,7 @@ namespace Backend.Modules.Team
 			if (targetPlayer == null) return;
 
 			await targetPlayer.Notify("FRAKTION", $"Du wurdest von {player.Name} aus der Fraktion entlassen!", NotificationType.INFO);
-			await targetPlayer.SetTeam(0, 0, false, false, false);
+			await targetPlayer.SetTeam(0);
 		}
 
 		private async void BuyEquip(ClPlayer player, string eventKey)
