@@ -176,15 +176,15 @@ namespace Backend.Modules.Chat.Public.Admin
 		{
 			if (!CheckPermission(player) || rank >= (int)player.DbModel.AdminRank) return;
 
-			var dbTarget = _accountService.GetAccount(targetName);
-			if(dbTarget == null)
+			var acc = _accountService.GetAccount(targetName);
+			if (acc == null)
 			{
-				await player.Notify("Administration", "Der Spieler konnte nicht gefunden werden!", NotificationType.ERROR);
+				await player.Notify("Administration", "Der Spieler konnte nicht gefunden werden.", NotificationType.ERROR);
 				return;
 			}
 
-			dbTarget.AdminRank = (AdminRank)rank;
-			await player.Notify("Administration", $"Du hast den Adminrang von {dbTarget.Name} auf {Enum.GetName(typeof(AdminRank), rank)}", NotificationType.SUCCESS);
+			acc.AdminRank = (AdminRank)rank;
+			await player.Notify("Administration", $"Du hast den Adminrang von {acc.Name} auf {Enum.GetName(typeof(AdminRank), rank)}", NotificationType.SUCCESS);
 		}
 	}
 }
