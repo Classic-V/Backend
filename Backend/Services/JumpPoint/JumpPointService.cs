@@ -48,7 +48,7 @@ namespace Backend.Services.JumpPoint
 
             lock (ClShape.All)
             {
-                foreach (var shape in ClShape.All.Where(x => x.Id == id && x.ShapeType == Utils.Enums.ColshapeType.JUMP_POINT))
+                foreach (var shape in ClShape.All.Where(x => x.Id == id && x.ShapeType == Utils.Enums.ColshapeType.JUMP_POINT).ToList())
                     shape.Destory();
 			}
 
