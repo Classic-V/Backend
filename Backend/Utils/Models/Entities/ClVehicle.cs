@@ -11,9 +11,9 @@ namespace Backend.Utils.Models.Entities
 	{
 		public static readonly List<ClVehicle> All = new();
 
-		public static ClVehicle getVehicle(int id)
+		public static ClVehicle GetVehicle(int id)
 		{
-			return All.FirstOrDefault(x => x.DbModel?.Id == id);
+			return All.Find(x => x.DbModel?.Id == id)!;
 		}
 
 		public VehicleModel? DbModel { get; set; } = null;
