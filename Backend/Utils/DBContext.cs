@@ -1,5 +1,4 @@
-﻿using Backend.Utils.Configurations;
-using Backend.Utils.Models.Database;
+﻿using Backend.Utils.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using MySqlConnector;
@@ -10,6 +9,7 @@ namespace Backend.Utils
 	public class DBContext : DbContext
 	{
 		public DbSet<AccountModel> Accounts { get; set; }
+		public DbSet<BanModel> Bans { get; set; }
 		public DbSet<DropModel> Drops { get; set; }
 		public DbSet<GarageModel> Garages { get; set; }
 		public DbSet<VehicleModel> Vehicles { get; set; }
@@ -58,6 +58,7 @@ namespace Backend.Utils
 				var connectionString = new MySqlConnectionStringBuilder
 				{
 					Server = "127.0.0.1",
+					// Server = "185.94.29.222",
 					Port = 3306,
 					UserID = "roleplay",
 					Password = "83P3jYZL]8i3c3pf",

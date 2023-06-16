@@ -2,7 +2,7 @@
 using Backend.Utils.Enums;
 using Backend.Utils.Models.Animation;
 using Backend.Utils.Models.Bank;
-using Backend.Utils.Models.ClothesShop;
+using Backend.Utils.Models.Entities;
 using Backend.Utils.Models.Inventory;
 using Backend.Utils.Models.Player;
 
@@ -25,7 +25,6 @@ namespace Backend.Utils.Models.Database
         public int Money { get; set; } = 0;
         public int BankMoney { get; set; } = 0;
         public AdminRank AdminRank { get; set; } = 0;
-		public BanModel Ban { get; set; } = new();
 		public List<WarnModel> Warns { get; set; } = new();
 		public InventoryModel Inventory { get; set; } = new(new List<ItemModel>(), 40f, 8, InventoryType.PLAYER);
 		public CustomizationModel Customization { get; set; } = new();
@@ -90,8 +89,17 @@ namespace Backend.Utils.Models.Database
 
 		[NotMapped] public int GangwarId { get; set; } = -1;
 
+		[NotMapped]
+		public bool IsLoggedIn
+		{
+			get
+			{
+				return ClPlayer.LoggedIn.Find(x => x.DbModel.Id == Id) != null;
+			}
+		}
+
 		public AccountModel() {}
-		public AccountModel(string name, string password, ulong socialClub, ulong hardwareId, ulong hardwareIdEx, long discordId, ushort health, ushort armor, PositionModel lastPos, List<LoadoutModel> loadout, bool alive, int money, int bankMoney, AdminRank adminRank, BanModel ban, InventoryModel inventory, CustomizationModel customization, ClothesModel clothes, int team, int teamRank, bool teamAdmin, bool teamStoragePermission, int level, int xp, bool phone, bool backpack, int paycheckTicks)
+		public AccountModel(string name, string password, ulong socialClub, ulong hardwareId, ulong hardwareIdEx, long discordId, ushort health, ushort armor, PositionModel lastPos, List<LoadoutModel> loadout, bool alive, int money, int bankMoney, AdminRank adminRank, InventoryModel inventory, CustomizationModel customization, ClothesModel clothes, int team, int teamRank, bool teamAdmin, bool teamStoragePermission, int level, int xp, bool phone, bool backpack, int paycheckTicks)
         {
             Name = name;
             Password = password;
@@ -107,7 +115,6 @@ namespace Backend.Utils.Models.Database
             Money = money;
 			BankMoney = bankMoney;
             AdminRank = adminRank;
-            Ban = ban;
             Inventory = inventory;
             Customization = customization;
             Clothes = clothes;
