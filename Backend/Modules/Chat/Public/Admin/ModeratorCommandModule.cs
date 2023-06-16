@@ -16,17 +16,15 @@ namespace Backend.Modules.Chat.Public.Admin
 		{
 			_accountService = accountService;
 
-			eventController.OnClient<string>("Server:Command:resetdc", ResetDiscord);
-			eventController.OnClient<string>("Server:Command:resetsocial", ResetSocial);
-			eventController.OnClient<string>("Server:Command:resethwid", ResetHwid);
+			eventController.OnClient<string, string>("Server:Command:resetid", ResetId);
 			eventController.OnClient<string, int>("Server:Command:setdimension", SetDimension);
 			eventController.OnClient<string, string>("Server:Command:setname", SetName);
 			eventController.OnClient<string>("Server:Command:clearinv", ClearInv);
 			eventController.OnClient<string>("Server:Command:clearwep", ClearWeapons);
-			eventController.OnClient("Server:Command:rep", Repair);
+			eventController.OnClient("Server:Command:rep", RepairVehicle);
 		}
 
-		private void ResetDiscord(ClPlayer player, string eventKey, string targetName)
+		private void ResetId(ClPlayer player, string eventKey, string targetName, string idType)
 		{
 			if (!CheckPermission(player)) return;
 
@@ -37,42 +35,22 @@ namespace Backend.Modules.Chat.Public.Admin
 				return;
 			}
 
-			target.DiscordId = 0;
-			
-			player.Notify("Administration", $"Die Discord-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
-		}
-
-		private void ResetSocial(ClPlayer player, string eventKey, string targetName)
-		{
-			if (!CheckPermission(player)) return;
-
-			var target = _accountService.GetAccount(targetName);
-			if (target == null)
+			switch (idType)
 			{
-				player.Notify("Administration", "Der Account konnte nicht gefunden werden.", NotificationType.ERROR);
-				return;
+				case "social":
+					target.SocialClub = 0;
+					player.Notify("Administration", $"Die Socialclub-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
+					break;
+				case "dc":
+					target.DiscordId = 0;
+					player.Notify("Administration", $"Die Discord-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
+					break;
+				case "hwid":
+					target.HardwareId = 0;
+					target.HardwareIdEx = 0;
+					player.Notify("Administration", $"Die Hardware-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
+					break;
 			}
-
-			target.SocialClub = 0;
-			
-			player.Notify("Administration", $"Die Socialclub-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
-		}
-
-		private void ResetHwid(ClPlayer player, string eventKey, string targetName)
-		{
-			if (!CheckPermission(player)) return;
-
-			var target = _accountService.GetAccount(targetName);		
-			if (target == null)
-			{
-				player.Notify("Administration", "Der Account konnte nicht gefunden werden.", NotificationType.ERROR);
-				return;
-			}
-
-			target.HardwareId = 0;
-			target.HardwareIdEx = 0;
-			
-			player.Notify("Administration", $"Die Hardware-Id von {targetName} wurde zurück gesetzt!", NotificationType.SUCCESS);
 		}
 
 		private async void SetDimension(ClPlayer player, string eventKey, string targetName, int dimension)
@@ -159,7 +137,7 @@ namespace Backend.Modules.Chat.Public.Admin
 			await player.Notify("Administration", "Du hast die Waffen von " + acc.Name + " geleert!", NotificationType.SUCCESS);
 		}
 
-		public async void Repair(ClPlayer player, string eventKey)
+		public async void RepairVehicle(ClPlayer player, string eventKey)
 		{
 			if (!CheckPermission(player)) return;
 

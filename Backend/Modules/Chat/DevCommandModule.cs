@@ -168,7 +168,7 @@ namespace Backend.Modules.Chat
 
             eventController.OnClient<int, int>("Server:Command:addhouse", AddHouse);
 
-            eventController.OnClient<string, int, string, string, int>("Server:Command:addanim", AddAnim);
+            eventController.OnClient<string, string, string, int>("Server:Command:addanim", AddAnim);
 
             eventController.OnClient<string, int>("Server:Command:setbank", SetBank);
 
@@ -481,6 +481,7 @@ namespace Backend.Modules.Chat
 		{
 			if (player.DbModel == null || player.DbModel.AdminRank < AdminRank.PROJEKTLEITER) return;
 
+			await player.Notify("Administration", "Du hast das speichern der Datenbank aufgegeben.", NotificationType.INFO);
 			await _databaseController.SaveDatabase();
 		}
 
@@ -569,7 +570,7 @@ namespace Backend.Modules.Chat
             }
         }
 
-        private async void AddAnim(ClPlayer player, string eventKey, string name, int category, string animDict, string animName, int animFlag)
+        private async void AddAnim(ClPlayer player, string eventKey, string name, string animDict, string animName, int animFlag)
         {
             if (player.DbModel.AdminRank < AdminRank.GAMEDESIGN || player == null! || player.DbModel == null!) return;
 
@@ -578,7 +579,7 @@ namespace Backend.Modules.Chat
                 name = name.Replace("_", " ");
             }
 
-            var data = new AnimationModel(name, (AnimationCategoryType)category, animDict, animName, animFlag);
+            var data = new AnimationModel(name, animDict, animName, animFlag);
             if (data == null!) return;
 
             await _animationService.AddAnimation(data);

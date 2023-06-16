@@ -23,9 +23,13 @@ namespace Backend.Modules.Chat.Public.Admin
 			eventController.OnClient<string>("Server:Command:goto", Goto);
 			eventController.OnClient<string, string>("Server:Command:kick", Kick);
 			eventController.OnClient<string>("Server:Command:revive", Revive);
-			eventController.OnClient("Server:Command:aduty", ToggleAduty);
+			eventController.OnClient<string>("Server:Command:heal", Heal);
+			eventController.OnClient<bool>("Server:Command:aduty", ToggleAduty);
 			eventController.OnClient<int>("Server:Command:dv", DeleteVehicle);
 			eventController.OnClient("Server:Command:tpm", GotoMarkerCommand);
+			eventController.OnClient("Server:Command:vanish", Vanish);
+			eventController.OnClient<string, string[]>("Server:Command:pm", PrivateMessage);
+			eventController.OnClient<string>("Server:Command:freeze", Freeze);
 			eventController.OnClient<float, float, float>("Server:Admin:SendMarkerPosition:ForGoto", GotoMarkerCallback);
 		}
 
@@ -33,7 +37,7 @@ namespace Backend.Modules.Chat.Public.Admin
 		{
 			if (!CheckPermission(player)) return;
 
-			var target = ClPlayer.All.FirstOrDefault(x => x.Name.ToLower() == targetName.ToLower());
+			var target = targetName == string.Empty ? player : ClPlayer.All.FirstOrDefault(x => x.DbModel != null && x.Name.ToLower() == targetName.ToLower());
 			if (target == null)
 			{
 				player.Notify("Administration", "Der Spieler konnte nicht gefunden werden.", NotificationType.ERROR);
@@ -53,6 +57,8 @@ namespace Backend.Modules.Chat.Public.Admin
 			target.SetHealth(200, 0, false);
 			target.SetPosition(respawnPos);
 			target.SetDimension(0);
+			
+			player.Notify("Administration", $"Du hast {target.Name} respawned.", NotificationType.INFO);
 		}
 
 		private void Bring(ClPlayer player, string eventKey, string targetName)
@@ -133,9 +139,28 @@ namespace Backend.Modules.Chat.Public.Admin
 			target.SetStabilized(false);
 			target.StopAnimation();
 			target.SetHealth(200, 0);
+			
+			player.Notify("Administration", $"Du hast {target.Name} wiederbelebt.", NotificationType.SUCCESS);
 		}
 		
-		private async void ToggleAduty(ClPlayer player, string eventKey)
+		private void Heal(ClPlayer player, string eventKey, string targetName = "")
+		{
+			if (!CheckPermission(player)) return;
+
+			var target = targetName == string.Empty ? player : ClPlayer.All.FirstOrDefault(x => x.DbModel != null && x.Name.ToLower() == targetName.ToLower());
+			if (target == null)
+			{
+				player.Notify("Administration", "Der Spieler konnte nicht gefunden werden.", NotificationType.ERROR);
+				return;
+			}
+
+			target.SetHealth(200, 0);
+			target.SetFood(100, 100, 100);
+			
+			player.Notify("Administration", $"Du hast {target.Name} geheilt.", NotificationType.SUCCESS);
+		}
+		
+		private async void ToggleAduty(ClPlayer player, string eventKey, bool secret = false)
 		{
 			if (player.DbModel == null || player.DbModel.AdminRank < Utils.Enums.AdminRank.SUPPORTER) return;
 
@@ -147,11 +172,16 @@ namespace Backend.Modules.Chat.Public.Admin
 			{
 				if(player.DbModel.Cuffed) await player.SetCuffed(false);
 				if(player.DbModel.Roped) await player.SetRoped(false);
-				await player.ApplyClothes((player.DbModel.Customization.Gender == 1 ? ClothesModel.MaleAdminClothes : ClothesModel.FemaleAdminClothes)[(int)player.DbModel.AdminRank]);
+				if (!secret) await player.ApplyClothes((player.DbModel.Customization.Gender == 1 ? ClothesModel.MaleAdminClothes : ClothesModel.FemaleAdminClothes)[(int)player.DbModel.AdminRank]);
+				player.Emit("nametags:Config", true, false, false, 100);
+				await player.Notify("Administration", "Du bist nun im Admin-Duty.", NotificationType.INFO);
 			} 
 			else
 			{
+				await player.SetInvisible(true);
 				await player.ApplyClothes();
+				player.Emit("nametags:Config", false, false, false, 100);
+				player.Notify("Administration", "Du bist nun nicht mehr im Admin-Duty.", NotificationType.INFO);
 			}
 		}
 
@@ -166,6 +196,50 @@ namespace Backend.Modules.Chat.Public.Admin
 					vehicle.Destroy();
 				}
 			}		
+		}
+		
+		private async void Vanish(ClPlayer player, string eventKey)
+		{
+			if (!CheckPermission(player)) return;
+			if (!player.Aduty)
+			{
+				await player.Notify("Administration", "Du musst im Admin-Duty sein, um diesen Befehl zu nutzen.", NotificationType.ERROR);
+				return;
+			}
+
+			player.Vanish = !player.Vanish;
+			player.Emit("Client:AdminModule:SetVanish", player.Vanish);
+			await player.SetInvisible(!player.Vanish);
+		}
+
+		private async void PrivateMessage(ClPlayer player, string eventKey, string targetName, params string[] message) 
+		{
+			if (!CheckPermission(player)) return;
+			
+			var target = ClPlayer.All.FirstOrDefault(x => x.Name.ToLower() == targetName.ToLower());
+			if (target == null)
+			{
+				await player.Notify("Administration", "Der Spieler konnte nicht gefunden werden.", NotificationType.ERROR);
+				return;
+			}
+
+			await target.Notify($"Administartion ({player.Name})", string.Join(" ", message), NotificationType.INFO);
+		}
+
+		private async void Freeze(ClPlayer player, string eventKey, string targetName)
+		{
+			if (!CheckPermission(player)) return;
+			
+			var target = ClPlayer.All.FirstOrDefault(x => x.Name.ToLower() == targetName.ToLower());
+			if (target == null)
+			{
+				await player.Notify("Administration", "Der Spieler konnte nicht gefunden werden.", NotificationType.ERROR);
+				return;
+			}
+
+			target.Frozen = !target.Frozen;
+			await target.Freeze(target.Frozen);
+			await player.Notify("Administration", $"Du hast {target.Name} " + (target.Frozen ? "gefreezed" : "unfreezed") + ".", NotificationType.SUCCESS);
 		}
 	}
 }

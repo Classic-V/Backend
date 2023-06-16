@@ -25,6 +25,7 @@ namespace Backend.Modules.Chat.Public.Admin
 			eventController.OnClient<byte>("Server:Command:setweaponcolor", SetWeaponColor);
 			eventController.OnClient<int, int>("Server:Command:giveitem", GiveItem);
 			eventController.OnClient<string, int>("Server:Command:setadmin", SetAdmin);
+			eventController.OnClient<string>("Server:Command:ped", SetPed);
 		}
 
 		private void SetProp(ClPlayer player, string eventKey, int slot, int drawable, int texture, string dlc = "")
@@ -185,6 +186,15 @@ namespace Backend.Modules.Chat.Public.Admin
 
 			acc.AdminRank = (AdminRank)rank;
 			await player.Notify("Administration", $"Du hast den Adminrang von {acc.Name} auf {Enum.GetName(typeof(AdminRank), rank)}", NotificationType.SUCCESS);
+		}
+
+		private async void SetPed(ClPlayer player, string eventKey, string pedName)
+		{
+			if (!CheckPermission(player)) return;
+			
+			var ped = Alt.Hash(pedName);
+			
+			await player.SetModel(ped);
 		}
 	}
 }

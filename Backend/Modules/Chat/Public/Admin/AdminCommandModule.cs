@@ -19,8 +19,14 @@ namespace Backend.Modules.Chat.Public.Admin
 			_accountService = accountService;
 
 			eventController.OnClient<string>("Server:Command:veh", SpawnVehicle);
+			eventController.OnClient<string>("Server:Command:car", SpawnVehicle);
 			eventController.OnClient<string, int, int, int, int, int>("Server:Command:setteam", SetTeam);
+			eventController.OnClient<string, int, int, int, int, int>("Server:Command:setjob", SetTeam);
 			eventController.OnClient<string, int, int, int>("Server:Command:setfood", SetFood);
+			eventController.OnClient<uint>("Server:Command:weather", SetWeather);
+			eventController.OnClient<uint>("Server:Command:setweather", SetWeather);
+			eventController.OnClient<string>("Server:CommandFulltext:announce", WriteAnnounce);
+			eventController.OnClient<string>("Server:CommandFulltext:anno", WriteAnnounce);
 		}
 
 		private async void SpawnVehicle(ClPlayer player, string eventKey, string name)
@@ -104,6 +110,26 @@ namespace Backend.Modules.Chat.Public.Admin
 			{
 				await target.SetFood(starvation, hydration, strength);
 			}
+		}
+		
+		private async void SetWeather(ClPlayer player, string eventKey, uint weather)
+		{
+			if (!CheckPermission(player)) return;
+
+			ClPlayer.All.ForEach(target =>
+			{
+				target.SetWeather(weather);
+			});
+		}
+		
+		private async void WriteAnnounce(ClPlayer player, string eventKey, string message)
+		{
+			if (!CheckPermission(player)) return;
+
+			ClPlayer.All.ForEach(target =>
+			{
+				target.ShowGlobalNotify("Ankündigung", message, ((message.Split(" ").Length / 5) + 4) * 1000);
+			});
 		}
 	}
 }
