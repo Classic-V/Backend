@@ -10,6 +10,7 @@ using Backend.Utils.Models.Player.Client;
 using Backend.Utils.Streamer;
 using Newtonsoft.Json;
 using Backend.Utils.Models.Bank;
+using Backend.Utils.Models.Input;
 
 namespace Backend.Utils.Models.Entities
 {
@@ -43,6 +44,7 @@ namespace Backend.Utils.Models.Entities
 		public List<LoadoutModel> GangwarCachedWeapons { get; set; }
 
 		public bool Aduty { get; set; } = false;
+		public bool Vanish { get; set; } = false;
 
 		public bool InHostpital { get; set; } = false;
 
@@ -165,6 +167,12 @@ namespace Backend.Utils.Models.Entities
 		{
 			EmitBrowser("Hud:ShowGlobalNotification", JsonConvert.SerializeObject(new ClientNotificationModel(title, msg, 0, duration)));
 			return Task.CompletedTask;
+		}
+
+		public async Task ShowInput(string title, string message, InputType type, string callback, params object[] data)
+		{
+			await ShowComponent("Input", true,
+				JsonConvert.SerializeObject(new InputDataModel(title, message, type, callback, data)));
 		}
 
 		public Task ApplyWeapons()
