@@ -1,9 +1,13 @@
 ﻿using AltV.Net.Data;
 using AltV.Net.Enums;
+using Backend.Controllers.Ban.Interface;
 using Backend.Controllers.Event.Interface;
 using Backend.Services.Account.Interface;
+using Backend.Services.Ban;
+using Backend.Services.Ban.Interface;
 using Backend.Utils.Enums;
 using Backend.Utils.Models;
+using Backend.Utils.Models.Database;
 using Backend.Utils.Models.Entities;
 using Backend.Utils.Models.Player;
 using Newtonsoft.Json;
@@ -12,8 +16,10 @@ namespace Backend.Modules.Anticheat
 {
 	public class AnticheatModule : Module<AnticheatModule>
 	{
-		public AnticheatModule(IEventController eventController) : base("AnticheatModule")
+		private IBanService _banService;
+		public AnticheatModule(IEventController eventController, IBanService banService) : base("AnticheatModule")
 		{
+			_banService = banService;
 			// PLAYER
 			eventController.OnClient<uint>("Server:Anticheat:Weapon", Weapon);
 			eventController.OnClient<uint, int, int>("Server:Anticheat:Ammo", Ammo);
@@ -87,7 +93,9 @@ namespace Backend.Modules.Anticheat
 			
 			if (player.DbModel.AdminRank >= AdminRank.SUPERADMINISTRATOR) return;
 
-			player.DbModel.Ban = new BanModel(true, reason, DateTime.Now, "ANTICHEAT");
+			// player.DbModel.Ban = new BanModel(true, reason, DateTime.Now, "ANTICHEAT");
+
+			_banService.AddBan(new BanModel(player.DbModel.Id, "Anticheat Ban", permanent: true));
 			player.Kick("Dein Account wurde gesperrt! Für weitere Informationen kannst du ein Ticket im Forum erstellen. (https://forum.classicv.de)");
 			ClPlayer.All.ForEach(async x => await x.ShowGlobalNotify("ADMINISTRATIVE NACHRICHT", $"Der Spieler {player.Name} wurde vom Anticheat permanent aus der Community ausgeschlossen!", 5000));
 		}

@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Backend.Modules.Inventory;
 using Backend.Utils.Models.Animation;
 using Backend.Utils.Models.Bank;
-using Backend.Utils.Models.ClothesShop;
 
 namespace Backend.Utils.Configurations
 {
@@ -38,9 +37,6 @@ namespace Backend.Utils.Configurations
             builder.Property(x => x.Money).HasColumnName("money").HasColumnType("int(32)");
             builder.Property(x => x.BankMoney).HasColumnName("bank_money").HasColumnType("int(32)");
             builder.Property(x => x.AdminRank).HasColumnName("admin_rank").HasColumnType("smallint");
-			builder.Property(x => x.Ban).HasColumnName("ban").HasConversion(
-                y => JsonConvert.SerializeObject(y),
-                y => JsonConvert.DeserializeObject<BanModel>(y)!).HasColumnType("longtext");
 			builder.Property(x => x.Warns).HasColumnName("warns").HasConversion(
 				y => JsonConvert.SerializeObject(y),
 				y => JsonConvert.DeserializeObject<List<WarnModel>>(y)!).HasColumnType("longtext");

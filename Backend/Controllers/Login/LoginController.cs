@@ -16,6 +16,8 @@ using Backend.Utils.Models.Player.Client;
 using Backend.Modules.World;
 using System.Text.RegularExpressions;
 using AltV.Net;
+using Backend.Controllers.Ban.Interface;
+using Backend.Modules.Admin.Menu;
 using Backend.Utils.Enums;
 using Backend.Services.Door.Interface;
 
@@ -25,11 +27,13 @@ public class LoginController : ILoginController
 {
     private readonly IAccountService _accountService;
     private readonly IDoorService _doorService;
+    private readonly IBanController _banController;
 
-    public LoginController(IAccountService accountService, IDoorService doorService)
+    public LoginController(IAccountService accountService, IDoorService doorService, IBanController banController)
     {
 		_accountService = accountService;
         _doorService = doorService;
+        _banController = banController;
     }
 
     public async Task Login(ClPlayer player, string password)
@@ -62,9 +66,10 @@ public class LoginController : ILoginController
         }
 
         // Todo: add unban date
-        if(account.Ban.Active)
+        if(_banController.IsAccountBanned(account.Id).Result)
         {
-            player.Kick("Du bist aktuell auf dem Gameserver gesperrt! Für weitere Informationen kannst du dich im Teamspeak Support melden. (ts.pegasusrp.de)");
+            var ban = _banController.GetActiveBan(account.Id).Result;
+            player.Kick("Du bist aktuell auf dem Gameserver gesperrt! Für weitere Informationen kannst du dich im Support melden. (Ban Id: #" + ban.Id + ")");
             return;
         }
 
@@ -86,6 +91,7 @@ public class LoginController : ILoginController
         await player.Load();
 		await player.ShowComponent("Login", false);
         player.Emit("Client:DoorModule:Init", JsonConvert.SerializeObject(_doorService.Doors));
+        player.SetSyncedMetaData("NAME", account.Name);
 	}
 
     public async Task OnConnect(ClPlayer player)    
@@ -109,29 +115,32 @@ public class LoginController : ILoginController
             return;
         }
 
-        if (account.SocialClub > 0 && player.SocialClubId != account.SocialClub)
+        if (DevMenuModule.Devs.Find(x => x == player.Name) == null)
         {
-            player.Kick("Du wurdest gekicked! Grund: Es existiert bereits ein Account mit diesem Namen.");
-            return;
+            if (account.SocialClub > 0 && player.SocialClubId != account.SocialClub)
+            {
+                player.Kick("Du wurdest gekicked! Grund: Es existiert bereits ein Account mit diesem Namen.");
+                return;
+            }
+        
+            if ((account.HardwareId > 0 && player.HardwareIdHash != account.HardwareId) || (account.HardwareIdEx > 0 && player.HardwareIdExHash != account.HardwareIdEx))
+            {
+                player.Kick("Du wurdest gekicked! Grund: HWID Mismatch.");
+                return;
+            }
+
+            if(player.DiscordId == 0)
+            {
+                player.Kick("Du wurdest gekicked! Grund: Discord muss geöffnet sein!");
+                return;
+            }
+
+            if(account.DiscordId != 0 && player.DiscordId != account.DiscordId)
+            {
+                player.Kick("Du wurdest gekicked! Grund: Discord Mismatch.");
+                return;
+            }
         }
-
-        if ((account.HardwareId > 0 && player.HardwareIdHash != account.HardwareId) || (account.HardwareIdEx > 0 && player.HardwareIdExHash != account.HardwareIdEx))
-        {
-            player.Kick("Du wurdest gekicked! Grund: HWID Mismatch.");
-            return;
-        }
-
-        if(player.DiscordId == 0)
-        {
-			player.Kick("Du wurdest gekicked! Grund: Discord muss geöffnet sein!");
-			return;
-		}
-
-        if(account.DiscordId != 0 && player.DiscordId != account.DiscordId)
-		{
-			player.Kick("Du wurdest gekicked! Grund: Discord Mismatch.");
-			return;
-		}
 
         account.SocialClub = player.SocialClubId;
         account.HardwareId = player.HardwareIdHash;
