@@ -51,13 +51,13 @@ namespace Backend.Modules.Federal
             var items = new List<ClientNativeMenuItem>();
             if (!player.DbModel.SadDuty)
             {
-                items.Add(new ClientNativeMenuItem("SAD Dienst betreten", true, "Server:SAD:ToggleDuty", !player.DbModel.SadDuty));
+                items.Add(new ClientNativeMenuItem("SAD Dienst betreten") { Close = true, CallbackEvent = "Server:SAD:ToggleDuty", CallbackArgs = new object[] { !player.DbModel.SadDuty } });
             } 
             else 
             {
-                items.Add(new("SAD Dienst verlassen", true, "Server:SAD:ToggleDuty", !player.DbModel.SadDuty));
-                items.Add(new("SAD Einsatzkleidung", true, "Server:SAD:BuyItem", 9991, 1));
-                items.Add(new("SAD Schutzweste", true, "Server:SAD:BuyItem", 9999, 1));
+                items.Add(new ClientNativeMenuItem("SAD Dienst beenden") { Close = true, CallbackEvent = "Server:SAD:ToggleDuty", CallbackArgs = new object[] { !player.DbModel.SadDuty } });
+                items.Add(new ClientNativeMenuItem("SAD Einsatzkleidung") { Close = true, CallbackEvent = "Server:SAD:BuyItem", CallbackArgs = new object[] { 9991, 1 } });
+                items.Add(new ClientNativeMenuItem("SAD Schutzweste") { Close = true, CallbackEvent = "Server:SAD:BuyItem", CallbackArgs = new object[] { 9999, 1 } });
             }
 
             var menu = new ClientNativeMenu("SAD SHOP", items);

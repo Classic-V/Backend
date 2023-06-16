@@ -60,8 +60,8 @@ namespace Backend.Modules.Gangwar
 
             player.ShowNativeMenu(true, new ClientNativeMenu("Gangwar", new List<ClientNativeMenuItem>()
             {
-                new ClientNativeMenuItem("Fahrzeug Spawnen", true, "Server:Gangwar:SpawnVehicle"),
-				new ClientNativeMenuItem("Gangwar verlassen", true, "Server:Gangwar:PlayerQuit")
+	            new ClientNativeMenuItem("Fahrzeug Spawnen") { Close = true, CallbackEvent = "Server:Gangwar:SpawnVehicle" }, 
+	            new ClientNativeMenuItem("Gangwar verlassen") { Close = true, CallbackEvent = "Server:Gangwar:PlayerQuit" }
 			}));
 		}
 
@@ -94,7 +94,7 @@ namespace Backend.Modules.Gangwar
 
             player.ShowNativeMenu(true, new ClientNativeMenu("Gangwar Gebiet", new List<ClientNativeMenuItem>()
             {
-                new ClientNativeMenuItem("Angreifen", true, "Server:Gangwar:Start", player.CurrentShape.Id)
+	            new ClientNativeMenuItem("Angreifen") { Close = true, CallbackEvent = "Server:Gangwar:Start", CallbackArgs = new object[] {player.CurrentShape.Id}}
             }));
         }
 

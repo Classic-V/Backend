@@ -20,8 +20,7 @@ public class AnimationMenuModule : Module<AnimationMenuModule>
 		eventController.OnClient<int, int>("Server:NMenu:SaveAnimation", SaveAnimation);
         eventController.OnClient<int>("Server:NMenu:PlayAnimation", PlayAnimation);
 		eventController.OnClient("Server:NMenu:OpenSelectSlot", OpenSelectSlot);
-		eventController.OnClient<int>("Server:NMenu:OpenSelectCategory", OpenSelectCategory);
-		eventController.OnClient<int, int>("Server:NMenu:OpenSelectAnimation", OpenSelectAnimation);
+		eventController.OnClient<int>("Server:NMenu:OpenSelectAnimation", OpenSelectAnimation);
 	}
 
     private async void Open(ClPlayer player, string eventKey)
@@ -73,46 +72,25 @@ public class AnimationMenuModule : Module<AnimationMenuModule>
 		var items = new List<ClientNativeMenuItem>();
         for(var i = 0; i < 10; i++)
         {
-            items.Add(new ClientNativeMenuItem($"Slot #{i + 1} belegen", false, "Server:NMenu:OpenSelectCategory", i));
+            items.Add(new ClientNativeMenuItem($"Slot #{i + 1} belegen") { CallbackEvent = "Server:NMenu:OpenSelectAnimation", CallbackArgs = new object[] { i }});
         }
 
 		var menu = new ClientNativeMenu("Animation belegen", items);
 		await player.ShowNativeMenu(true, menu);
 	}
 
-	private async void OpenSelectCategory(ClPlayer player, string eventKey, int slot)
+	private async void OpenSelectAnimation(ClPlayer player, string eventKey, int slot)
 	{
-		var items = new List<ClientNativeMenuItem>
+		var items = new List<ClientNativeMenuItem>();
+
+		var animations = await _animationController.GetAnimations();
+        
+		foreach (var animationModel in animations.OrderBy(x => x.Name))
 		{
-			new ("Zurück", true, "Server:NMenu:OpenSelectSlot"),
-			new ("Sitzen", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.SIT),
-			new ("Liegen", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.LAY),
-			new ("Gesten", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.GESTURE),
-			new ("Tanzen", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.DANCE),
-			new ("Tätigkeiten", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.ACTIVITY),
-			new ("Sport", true, "Server:NMenu:OpenSelectAnimation", slot, AnimationCategoryType.SPORTS),
-		};
-
-		var menu = new ClientNativeMenu("Animation belegen", items);
-		await player.ShowNativeMenu(true, menu);
-	}
-
-	private async void OpenSelectAnimation(ClPlayer player, string eventKey, int slot, int category)
-	{
-		var items = new List<ClientNativeMenuItem>
-		{
-			new ("Zurück", true, "Server:NMenu:OpenSelectCategory", slot),
-		};
-
-		var categoryItems = await _animationController.GetAnimationCategory((AnimationCategoryType)category);
-		if (categoryItems == null) return;
-
-		categoryItems.ForEach(animation =>
-		{
-			items.Add(new ClientNativeMenuItem(animation.Name, true, "Server:NMenu:SaveAnimation", animation.Id, slot));
-		});
-
-		var menu = new ClientNativeMenu("Animation belegen", items);
+			items.Add(new ClientNativeMenuItem(animationModel.Name) { Close = true, CallbackEvent = "Server:NMenu:SaveAnimation", CallbackArgs = new object[] { animationModel.Id, slot } });
+		} 
+		
+		var menu = new ClientNativeMenu("Animation belegen", items, "Slot #" + (slot + 1));
 		await player.ShowNativeMenu(true, menu);
 	}
 }

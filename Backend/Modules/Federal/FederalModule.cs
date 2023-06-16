@@ -52,9 +52,9 @@ namespace Backend.Modules.Federal
 
             var items = new List<ClientNativeMenuItem>()
             {
-                new ($"Ortungs Lizenz ({gpsLicense})", true, "Server:Federal:GiveLicenseConfirm", target.DbModel.Id, FederalLicenseTypes.GPS),
-                new ($"Telefon Verlauf ({historyLicense})", true, "Server:Federal:GiveLicenseConfirm", target.DbModel.Id, FederalLicenseTypes.PHONE_HISTORY),
-                new ($"SAD Dienst ({sadLicense})", true, "Server:Federal:GiveLicenseConfirm", target.DbModel.Id, FederalLicenseTypes.SAD),
+                new ClientNativeMenuItem($"Ortungs Lizenz ({gpsLicense})") {Close = true, CallbackEvent = "Server:Federal:GiveLicenseConfirm", CallbackArgs = new object[] {target.DbModel.Id, FederalLicenseTypes.GPS}},
+                new ClientNativeMenuItem($"Telefon Verlauf ({historyLicense})") {Close = true, CallbackEvent = "Server:Federal:GiveLicenseConfirm", CallbackArgs = new object[] {target.DbModel.Id, FederalLicenseTypes.PHONE_HISTORY}},
+                new ClientNativeMenuItem($"SAD Dienst ({sadLicense})") {Close = true, CallbackEvent = "Server:Federal:GiveLicenseConfirm", CallbackArgs = new object[] {target.DbModel.Id, FederalLicenseTypes.SAD}},
             };
 
             var menu = new ClientNativeMenu("IT Lizenzen", items);

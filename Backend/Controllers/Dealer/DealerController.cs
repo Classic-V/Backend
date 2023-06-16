@@ -73,12 +73,12 @@ namespace Backend.Controllers.Dealer
 				$"Dealer #{id}",
 				new List<ClientNativeMenuItem>()
 				{
-					new ClientNativeMenuItem($"Kokain Verkaufen (${dealer.CocainePrice})", true, "Server:Dealer:SellItem", id, 301),
-					new ClientNativeMenuItem($"Kokain Kiste Verkaufen (${dealer.CocaineBoxPrice})", true, "Server:Dealer:SellItem", id, 401),
-					new ClientNativeMenuItem($"Weed Verkaufen (${dealer.WeedPrice})", true, "Server:Dealer:SellItem", id, 302),
-					new ClientNativeMenuItem($"Weed Kiste Verkaufen (${dealer.WeedBoxPrice})", true, "Server:Dealer:SellItem", id, 402),
-					new ClientNativeMenuItem($"Goldbarren Verkaufen (${dealer.GoldPrice})", true, "Server:Dealer:SellItem", id, 10000),
-					new ClientNativeMenuItem($"Juwelen Verkaufen (${dealer.JewelPrice})", true, "Server:Dealer:SellItem", id, 10001),
+					new ClientNativeMenuItem($"Kokain Verkaufen (${dealer.CocainePrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 301}},
+					new ClientNativeMenuItem($"Kokain Kiste Verkaufen (${dealer.CocaineBoxPrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 401}},
+					new ClientNativeMenuItem($"Weed Verkaufen (${dealer.WeedPrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 302}},
+					new ClientNativeMenuItem($"Weed Kiste Verkaufen (${dealer.WeedBoxPrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 402}},
+					new ClientNativeMenuItem($"Goldbarren Verkaufen (${dealer.GoldPrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 10000}},
+					new ClientNativeMenuItem($"Juwelen Verkaufen (${dealer.JewelPrice})") {Close = true, CallbackEvent = "Server:Dealer:SellItem", CallbackArgs = new object[] {id, 10001}},
 				}));
 		}
 

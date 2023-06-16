@@ -49,8 +49,8 @@ public class PostJobModule : Module<PostJobModule>, IEventColshape
         if (shape == null! || shape.ShapeType != ColshapeType.POST_JOB_START) return;
         
         var items = new List<ClientNativeMenuItem>();
-        if (!PlayerIsInJob(player.DbModel.Id)) items.Add(new("Job anfangen", true, "Server:PostJob:Join"));
-        else items.Add(new("Job beenden", true, "Server:PostJob:Join"));
+        if (!PlayerIsInJob(player.DbModel.Id)) items.Add(new("Job anfangen") { Close = true, CallbackEvent = "Server:PostJob:Join" });
+        else items.Add(new("Job beenden") { Close = true, CallbackEvent = "Server:PostJob:Join" });
 
         var menu = new ClientNativeMenu("Post Job", items);
         await player.ShowNativeMenu(true, menu);

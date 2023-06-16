@@ -32,27 +32,41 @@ namespace Backend.Controllers.Garage
 
 		public Task<List<VehicleModel>> GetPlayerVehicles(ClPlayer player, GarageModel garage)
 		{
-			return Task.FromResult(_vehicleService.Vehicles.Where(x => x.Type == VehicleType.PLAYER &&
-				       _vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
-				       x.Owner == player.DbModel.Id &&
-				       ((x.Parked && x.Garage == garage.Id) || player.Position.Distance(ClVehicle.getVehicle(x.Id).Position) < 25)).ToList());
+			return Task.FromResult(_vehicleService.Vehicles.Where(x =>
+			{
+				if (ClVehicle.GetVehicle(x.Id) is null) return false;
+
+				return x.Type == VehicleType.PLAYER &&
+				        _vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
+				        x.Owner == player.DbModel.Id &&
+				        ((x.Parked && x.Garage == garage.Id) ||
+				         player.Position.Distance(ClVehicle.GetVehicle(x.Id).Position) < 25);
+			}).ToList());
 		}
 
 		public Task<List<VehicleModel>> GetTeamVehicles(ClPlayer player, GarageModel garage)
 		{
 			return Task.FromResult(_vehicleService.Vehicles.Where(x =>
-                x.Type == VehicleType.TEAM &&
-				_vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
-				x.Owner == player.DbModel.Team &&
-                ((x.Parked && x.Garage == garage.Id) || player.Position.Distance(ClVehicle.getVehicle(x.Id).Position) < 25)).ToList());
+			{
+				if (ClVehicle.GetVehicle(x.Id) is null) return false;
+
+				return x.Type == VehicleType.TEAM &&
+				       _vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
+				       x.Owner == player.DbModel.Team &&
+				       ((x.Parked && x.Garage == garage.Id) || player.Position.Distance(ClVehicle.GetVehicle(x.Id).Position) < 25);
+			}).ToList());
 		}
 
 		public Task<List<VehicleModel>> GetSwatVehicles(ClPlayer player, GarageModel garage)
 		{
 			return Task.FromResult(_vehicleService.Vehicles.Where(x =>
-				x.Type == VehicleType.SWAT &&
-				_vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
-				((x.Parked && x.Garage == garage.Id) || player.Position.Distance(ClVehicle.getVehicle(x.Id).Position) < 25)).ToList());
+			{
+				if (ClVehicle.GetVehicle(x.Id) is null) return false;
+
+				return x.Type == VehicleType.SWAT &&
+				       _vehicleService.GetVehicleInfo(x.InfoModelId).Result?.GarageType == garage.VehicleType &&
+				       ((x.Parked && x.Garage == garage.Id) || player.Position.Distance(ClVehicle.GetVehicle(x.Id).Position) < 25);
+			}).ToList());
 		}
 
 		public async Task<GarageModel?> GetGarageModel(int id)

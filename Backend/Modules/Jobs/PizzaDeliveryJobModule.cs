@@ -52,8 +52,8 @@ namespace Backend.Modules.Jobs
             if (shape == null || shape.ShapeType != ColshapeType.PIZZA_DELIVERY_JOB) return;
 
             var items = new List<ClientNativeMenuItem>();
-            if (!PlayerIsInJob(player.DbModel.Id)) items.Add(new ClientNativeMenuItem("Job anfangen", true, "Server:PizzaDeliveryJob:Join"));
-            else items.Add(new ClientNativeMenuItem("Job beenden", true, "Server:PizzaDeliveryJob:Quit"));
+            if (!PlayerIsInJob(player.DbModel.Id)) items.Add(new ClientNativeMenuItem("Job anfangen") { Close = true, CallbackEvent = "Server:PizzaDeliveryJob:Join" });
+            else items.Add(new ClientNativeMenuItem("Job beenden") { Close = true, CallbackEvent = "Server:PizzaDeliveryJob:Quit" });
 
             var menu = new ClientNativeMenu("Pizza Lieferant Job", items);
             await player.ShowNativeMenu(true, menu);
@@ -122,7 +122,7 @@ namespace Backend.Modules.Jobs
 
             if (currentJob.Vehicle == null || currentJob.Vehicle.IsDestroyed || currentJob.Vehicle.HealthData == null)
             {
-                await player.Notify("Pizza Lieferant", "Dein Pizza Roller wurde zerstört. Du erhälst kein Geld.", NotificationType.ERROR);
+                await player.Notify("Pizza Lieferant", "Dein Pizza Roller wurde zerstï¿½rt. Du erhï¿½lst kein Geld.", NotificationType.ERROR);
                 currentJob.ResetRoute();
                 return;
             }
@@ -181,7 +181,7 @@ namespace Backend.Modules.Jobs
             if (job.ReachedMaxHouses())
             {
                 await player.Notify("Pizza Lieferant",
-                    "Du hast alle Pizzen abgegeben! Bring den Roller zurück und erhalte dein Geld.", NotificationType.INFO);
+                    "Du hast alle Pizzen abgegeben! Bring den Roller zurï¿½ck und erhalte dein Geld.", NotificationType.INFO);
                 player.Emit("Client:PlayerModule:SetWaypoint", PizzaDeliveryJobModel.StartPosition.X, PizzaDeliveryJobModel.StartPosition.Y);
                 MarkerStreamer.RemoveMarker(job.RouteMarker.Id);
                 return;

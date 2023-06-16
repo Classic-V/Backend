@@ -48,7 +48,7 @@ namespace Backend.Modules.Processor
 
 			var data = new List<ClientNativeMenuItem>()
 			{
-				new ClientNativeMenuItem("Inventar verarbeiten", true, "Server:Processor:ProcessInventory", shape.Id)
+				new ClientNativeMenuItem("Inventar verarbeiten") { Close = true, CallbackEvent = "Server:Processor:ProcessInventory", CallbackArgs = new object[] { shape.Id }}
 			};
 
 			foreach(var veh in ClVehicle.All.Where(x => x.DbModel != null && (x.DbModel.Type == VehicleType.PLAYER && x.DbModel.Owner == player.DbModel.Id || x.DbModel.Type == VehicleType.TEAM && x.DbModel.Owner == player.DbModel.Team) && x.Position.Distance(player.Position) <= 18))
@@ -56,7 +56,7 @@ namespace Backend.Modules.Processor
 				var info = await _vehicleService.GetVehicleInfo(veh.DbModel!.InfoModelId);
 				if(info == null) continue;
 
-				data.Add(new ClientNativeMenuItem($"#{veh.DbModel.Id} - {info.Name} verarbeiten", true, "Server:Processor:ProcessVehicle", shape.Id, veh.DbModel.Id));
+				data.Add(new ClientNativeMenuItem($"#{veh.DbModel.Id} - {info.Name} verarbeiten") { Close = true, CallbackEvent = "Server:Processor:ProcessVehicle", CallbackArgs = new object[] { shape.Id, veh.DbModel.Id }});
 			}
 
 			await player.ShowNativeMenu(true, new ClientNativeMenu("Verarbeiter", data));

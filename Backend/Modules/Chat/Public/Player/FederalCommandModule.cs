@@ -23,7 +23,7 @@ namespace Backend.Modules.Chat.Public.Player
 
             eventController.OnClient("Server:Command:wanteds", WantedsMenu);
             eventController.OnClient<string>("Server:Command:find", Find);
-            eventController.OnClient<int>("Server:Federal:Locate", Locate);
+            eventController.OnClient<int>("Server:Federal:locate", Locate);
         }
 
         private async void WantedsMenu(ClPlayer player, string eventKey)
@@ -36,7 +36,8 @@ namespace Backend.Modules.Chat.Public.Player
             {
                 if (target.DbModel == null! || !await _jailController.PlayerHasJailCrimes(target.DbModel.Id)) return;
 
-                wantedPlayersItems.Add(new ClientNativeMenuItem($"{target.DbModel.Name.Replace('_', ' ')} ({await _jailController.GetPlayerJailDuration(target.DbModel.Id)} Hafteinheiten)", false, "Server:Federal:Locate", target.DbModel.Id));
+                //wantedPlayersItems.Add(new ClientNativeMenuItem($"{target.DbModel.Name.Replace('_', ' ')} ({await _jailController.GetPlayerJailDuration(target.DbModel.Id)} Hafteinheiten)", false, "Server:Federal:Locate", target.DbModel.Id));
+                wantedPlayersItems.Add(new ClientNativeMenuItem($"{target.DbModel.Name.Replace('_', ' ')} ({await _jailController.GetPlayerJailDuration(target.DbModel.Id)} Hafteinheiten)") { CallbackEvent = "Server:Federal:Locate", CallbackArgs = new object[] {target.DbModel.Id}});
             });
 
             var menu = new ClientNativeMenu("Wanteds Liste", wantedPlayersItems);

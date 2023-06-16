@@ -85,7 +85,7 @@ namespace Backend.Modules.Storage
 
             await player.ShowNativeMenu(true, new ClientNativeMenu($"Lagerhalle #{storage.Id}", new List<ClientNativeMenuItem>()
             {
-                new ("Upgrade", false, "Server:Storage:ShowUpgrades", storage.Id)
+                new ("Upgrade") { CallbackEvent = "Server:Storage:ShowUpgrades", CallbackArgs = new object[] { storage.Id }}
 			}));
         }
 
@@ -96,8 +96,8 @@ namespace Backend.Modules.Storage
 			var storage = await _storageService.GetStorage(id);
 			if (storage == null || storage.OwnerId != player.DbModel.Id) return;
             var items = new List<ClientNativeMenuItem>();
-            if (storage.Inventories.Count < storage.MaxInventorySlots()) items.Add(new ClientNativeMenuItem("Kisten ausbauen ($150000)", false, "Server:Storage:AddStorageBox", id));
-			if (storage.Inventories.Count == storage.MaxInventorySlots() && storage.WarehouseType < WarehouseType.HIGH_WAREHOUSE) items.Add(new ClientNativeMenuItem("Lagerhalle ausbauen ($150000)", true, "Server:Storage:Upgrade", id));
+            if (storage.Inventories.Count < storage.MaxInventorySlots()) items.Add(new ClientNativeMenuItem("Kisten ausbauen ($150000)") {CallbackEvent = "Server:Storage:AddStorageBox", CallbackArgs = new object[] {id}});
+			if (storage.Inventories.Count == storage.MaxInventorySlots() && storage.WarehouseType < WarehouseType.HIGH_WAREHOUSE) items.Add(new ClientNativeMenuItem("Lagerhalle ausbauen ($150000)") { Close = true, CallbackEvent = "Server:Storage:Upgrade", CallbackArgs = new object[] {id}});
 
 			await player.ShowNativeMenu(true, new ClientNativeMenu($"Lagerhalle #{id}", items));
 		}

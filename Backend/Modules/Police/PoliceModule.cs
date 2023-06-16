@@ -62,16 +62,16 @@ namespace Backend.Modules.Police
 			{
 				items = new()
 				{
-					new("SWAT Dienst verlassen", true, "Server:SWAT:ToggleDuty", false),
-					new("SWAT Einsatzkleidung", false, "Server:SWAT:BuyItem", 30, 1),
-					new("SWAT Schutzweste", false, "Server:SWAT:BuyItem", 32, 1),
+					new("SWAT Dienst verlassen") { Close = true, CallbackEvent = "Server:SWAT:ToggleDuty", CallbackArgs = new object[] {false}},
+					new("SWAT Einsatzkleidung") { CallbackEvent = "Server:SWAT:BuyItem", CallbackArgs = new object[] { 30, 1 }},
+					new("SWAT Schutzweste") { CallbackEvent = "Server:SWAT:BuyItem", CallbackArgs = new object[] {32, 1}},
 				};
 			}
 			else
 			{
 				items = new()
 				{
-					new("SWAT Dienst betreten", true, "Server:SWAT:ToggleDuty", true),
+					new("SWAT Dienst betreten") { Close = true, CallbackEvent = "Server:SWAT:ToggleDuty", CallbackArgs = new object[] { true }},
 				};
 			}
 

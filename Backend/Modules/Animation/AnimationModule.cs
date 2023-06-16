@@ -6,6 +6,7 @@ using Backend.Utils.Models;
 using Backend.Utils.Models.Entities;
 using Backend.Utils.Models.Player.Client;
 using Newtonsoft.Json;
+using Object = Backend.Utils.Models.Object;
 
 namespace Backend.Modules.Animation;
 
@@ -18,7 +19,6 @@ public class AnimationModule : Module<AnimationModule>
         _animationController = animationController;
 
         eventController.OnClient("Server:AnimationMenu:Open", Open);
-        eventController.OnClient<int>("Server:AnimationMenu:OpenCategory", OpenCategory);
         eventController.OnClient<int>("Server:AnimationMenu:PlayAnimation", PlayAnimation);
     }
 
@@ -27,46 +27,16 @@ public class AnimationModule : Module<AnimationModule>
         if (player == null! || player.DbModel == null! || !player.DbModel.Alive || player.Interaction ||
             player.IsFarming) return;
 
-        var items = new List<ClientNativeMenuItem>
-        {
-            new ("Sitzen", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.SIT),
-            new ("Liegen", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.LAY),
-            new ("Gesten", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.GESTURE),
-            new ("Tanzen", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.DANCE),
-            new ("Tätigkeiten", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.ACTIVITY),
-            new ("Sport", true, "Server:AnimationMenu:OpenCategory", AnimationCategoryType.SPORTS),
-        };
-
-        var menu = new ClientNativeMenu("Animations Menu", items);
-        await player.ShowNativeMenu(true, menu);
-    }
-
-    private async void OpenCategory(ClPlayer player, string eventKey, int categoryId)
-    {
-        if (player == null! || player.DbModel == null! || !player.DbModel.Alive || player.Interaction ||
-            player.IsFarming) return;
-
         var items = new List<ClientNativeMenuItem>();
-        items.Add(new ClientNativeMenuItem("Zurück", false, "Server:AnimationMenu:Open"));
 
-        var categoryItems = await _animationController.GetAnimationCategory((AnimationCategoryType)categoryId);
-        if (categoryItems == null!) return;
-
-        categoryItems.ForEach(animation =>
+        var animations = await _animationController.GetAnimations();
+        
+        foreach (var animationModel in animations.OrderBy(x => x.Name))
         {
-            items.Add(new ClientNativeMenuItem(animation.Name, false, "Server:AnimationMenu:PlayAnimation", animation.Id));
-        });
-
-        AnimationCategoryType type = (AnimationCategoryType)categoryId;
-
-        var title = type == AnimationCategoryType.SIT ? "Sitzen" :
-            type == AnimationCategoryType.LAY ? "Liegen" :
-            type == AnimationCategoryType.GESTURE ? "Gesten" :
-            type == AnimationCategoryType.DANCE ? "Tanzen" :
-            type == AnimationCategoryType.ACTIVITY ? "Tätigkeiten" :
-            type == AnimationCategoryType.SPORTS ? "Sport" : "error";
-
-        var menu = new ClientNativeMenu($"Animations Menu: {title}", items);
+            items.Add(new ClientNativeMenuItem(animationModel.Name) { CallbackEvent = "Server:AnimationMenu:PlayAnimation", CallbackArgs = new object[] { animationModel.Id }});
+        }
+		
+        var menu = new ClientNativeMenu("Animation spielen", items);
         await player.ShowNativeMenu(true, menu);
     }
 

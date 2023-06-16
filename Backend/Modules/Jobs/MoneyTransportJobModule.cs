@@ -41,8 +41,8 @@ namespace Backend.Modules.Jobs
             if (player.DbModel == null) return;
 
             var items = new List<ClientNativeMenuItem>();
-            if (!_moneyTransportJobController.PlayerIsInMoneyJob(player.DbModel.Id)) items.Add(new ClientNativeMenuItem("Job anfangen", true, "Server:MoneyTransportJob:Join"));
-            else items.Add(new ClientNativeMenuItem("Job beenden", true, "Server:MoneyTransportJob:Quit"));
+            if (!_moneyTransportJobController.PlayerIsInMoneyJob(player.DbModel.Id)) items.Add(new ClientNativeMenuItem("Job anfangen") { Close = true, CallbackEvent = "Server:MoneyTransportJob:Join" });
+            else items.Add(new ClientNativeMenuItem("Job beenden") { Close = true, CallbackEvent = "Server:MoneyTransportJob:Quit" });
 
             var menu = new ClientNativeMenu("Geldtransporter Job", items);
             await player.ShowNativeMenu(true, menu);
@@ -118,14 +118,14 @@ namespace Backend.Modules.Jobs
 
             if (job.Vehicle == null || job.Vehicle.IsDestroyed || job.Vehicle.HealthData == null)
             {
-                await player.Notify("Geldtransporter", "Dein Geldtransporter wurde zerstört. Du erhälst kein Geld.", NotificationType.INFO);
+                await player.Notify("Geldtransporter", "Dein Geldtransporter wurde zerstï¿½rt. Du erhï¿½lst kein Geld.", NotificationType.INFO);
                 job.ResetRoute();
                 return;
             }
 
             if (job.Vehicle.Position.Distance(MoneyTransportJobModel.StartPosition) > 30f)
             {
-                await player.Notify("Geldtransporter", "Dein Fahrzeug ist zuweit entfernt um es zurück zu geben!", NotificationType.ERROR);
+                await player.Notify("Geldtransporter", "Dein Fahrzeug ist zuweit entfernt um es zurï¿½ck zu geben!", NotificationType.ERROR);
                 return;
             }
 
@@ -162,7 +162,7 @@ namespace Backend.Modules.Jobs
 
             if (job.ReturnedAllNotes())
             {
-                await player.Notify("Geldtransporter", "Du hast bereits alle Banknoten zurückgegeben! Gebe das Fahrzeug ab und erhalte dein Geld!", NotificationType.INFO);
+                await player.Notify("Geldtransporter", "Du hast bereits alle Banknoten zurï¿½ckgegeben! Gebe das Fahrzeug ab und erhalte dein Geld!", NotificationType.INFO);
                 return;
             }
 
@@ -192,7 +192,7 @@ namespace Backend.Modules.Jobs
                 return;
             }
 
-            await player.Notify("Geldtransporter", "Du hast alle Banknoten zurückgegeben! Gebe das Fahrzeug ab und erhalte dein Geld!", NotificationType.INFO);
+            await player.Notify("Geldtransporter", "Du hast alle Banknoten zurï¿½ckgegeben! Gebe das Fahrzeug ab und erhalte dein Geld!", NotificationType.INFO);
             MarkerStreamer.RemoveMarker(job.RouteMarker.Id);
             player.Emit("Client:PlayerModule:SetWaypoint", MoneyTransportJobModel.StartPosition.X, MoneyTransportJobModel.StartPosition.Y);
         }

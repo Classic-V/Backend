@@ -54,21 +54,36 @@ public class WardrobeModule : Module<WardrobeModule>, IEventColshape
 
         var items = new List<ClientNativeMenuItem>
         {
-            new("Outfits", true, "Server:Wardrobe:ShowOutfit"),
-            new("Maske", true, "Server:Wardrobe:ShowClothing", "Mask"),
-            new("Körper", true, "Server:Wardrobe:ShowClothing", "Torsos"),
-            new("Hose", true, "Server:Wardrobe:ShowClothing", "Legs"),
-            new("Rucksäcke", true, "Server:Wardrobe:ShowClothing", "Bags"),
-            new("Schuhe", true, "Server:Wardrobe:ShowClothing", "Shoes"),
-            new("Accessories", true, "Server:Wardrobe:ShowClothing", "Accessories"),
-            new("Unterteil", true, "Server:Wardrobe:ShowClothing", "Undershirt"),
-            new("Makierungen", true, "Server:Wardrobe:ShowClothing", "Decals"),
-            new("Oberteil", true, "Server:Wardrobe:ShowClothing", "Tops"),
-            new("Hut", true, "Server:Wardrobe:ShowClothing", "Hats"),
-            new("Brillen", true, "Server:Wardrobe:ShowClothing", "Glasses"),
-            new("Ohren", true, "Server:Wardrobe:ShowClothing", "Ears"),
-            new("Uhren", true, "Server:Wardrobe:ShowClothing", "Watches"),
-            new("Ketten", true, "Server:Wardrobe:ShowClothing", "Bracelets"),
+            new ClientNativeMenuItem("Outfit") { Close = true, CallbackEvent = "Server:Wardrobe:ShowOutfit" },
+            new ClientNativeMenuItem("Maske") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Mask" } },
+            new ClientNativeMenuItem("Körper") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Torsos" } },
+            new ClientNativeMenuItem("Hose") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Legs" } },
+            new ClientNativeMenuItem("Rucksäcke") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Bags" } },
+            new ClientNativeMenuItem("Schuhe") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Shoes" } },
+            new ClientNativeMenuItem("Accessories") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Accessories" } },
+            new ClientNativeMenuItem("Unterteil") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Undershirt" } },
+            new ClientNativeMenuItem("Makierungen") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Decals" } },
+            new ClientNativeMenuItem("Oberteil") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Tops" } },
+            new ClientNativeMenuItem("Hut") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Hats" } },
+            new ClientNativeMenuItem("Brillen") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Glasses" } },
+            new ClientNativeMenuItem("Ohren") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Ears" } },
+            new ClientNativeMenuItem("Uhren") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Watches" } },
+            new ClientNativeMenuItem("Armbänder") { Close = true, CallbackEvent = "Server:Wardrobe:ShowClothing", CallbackArgs = new[] { "Bracelets" } },
+            // new("Outfits", true, "Server:Wardrobe:ShowOutfit"),
+            // new("Maske", true, "Server:Wardrobe:ShowClothing", "Mask"),
+            // new("Körper", true, "Server:Wardrobe:ShowClothing", "Torsos"),
+            // new("Hose", true, "Server:Wardrobe:ShowClothing", "Legs"),
+            // new("Rucksäcke", true, "Server:Wardrobe:ShowClothing", "Bags"),
+            // new("Schuhe", true, "Server:Wardrobe:ShowClothing", "Shoes"),
+            // new("Accessories", true, "Server:Wardrobe:ShowClothing", "Accessories"),
+            // new("Unterteil", true, "Server:Wardrobe:ShowClothing", "Undershirt"),
+            // new("Makierungen", true, "Server:Wardrobe:ShowClothing", "Decals"),
+            // new("Oberteil", true, "Server:Wardrobe:ShowClothing", "Tops"),
+            // new("Hut", true, "Server:Wardrobe:ShowClothing", "Hats"),
+            // new("Brillen", true, "Server:Wardrobe:ShowClothing", "Glasses"),
+            // new("Ohren", true, "Server:Wardrobe:ShowClothing", "Ears"),
+            // new("Uhren", true, "Server:Wardrobe:ShowClothing", "Watches"),
+            // new("Ketten", true, "Server:Wardrobe:ShowClothing", "Bracelets"),
         };
 
         var menu = new ClientNativeMenu("Kleiderschrank", items);
@@ -81,11 +96,13 @@ public class WardrobeModule : Module<WardrobeModule>, IEventColshape
         if (outfits == null) return;
 
         var list = new List<ClientNativeMenuItem>();
-        list.Add(new ClientNativeMenuItem("Outfit speichern", true, "Server:Wardrobe:ChooseSaveOutfit"));
+        list.Add(new ClientNativeMenuItem("Outfit speichern") { Close = true, CallbackEvent = "Server:Wardrobe:ChooseSaveOutfit" });
+        // list.Add(new ClientNativeMenuItem("Outfit speichern", true, "Server:Wardrobe:ChooseSaveOutfit"));
 
         outfits.ForEach(item =>
         {
-            var outfit = new ClientNativeMenuItem(item.Name, true, "Server:Wardrobe:ChooseOutfit", item.Id);
+            var outfit = new ClientNativeMenuItem(item.Name) { Close = true, CallbackEvent = "Server:Wardrobe:ChooseOutfit", CallbackArgs = new object[] { item.Id } };
+            // var outfit = new ClientNativeMenuItem(item.Name, true, "Server:Wardrobe:ChooseOutfit", item.Id);
             list.Add(outfit);
         });
 
@@ -103,100 +120,100 @@ public class WardrobeModule : Module<WardrobeModule>, IEventColshape
         switch (clothingItem)
         {
             case "Mask":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "mask"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[] {"mask"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 1).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) { CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Tops":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "tops"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"tops"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 11).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Torsos":
                 boughtItems.Where(x => !x.IsProp && x.Component == 3).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
-                }); 
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
+                });
                 break;
             case "Legs":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "legs"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"legs"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 4).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Bags":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "bags"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"bags"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 5).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Shoes":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "shoes"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"shoes"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 6).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Accessories":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "accessories"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"accessories"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 7).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Undershirt":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "undershirt"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"undershirt"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 8).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Decals":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "decals"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"decals"}});
                 boughtItems.Where(x => !x.IsProp && x.Component == 10).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Hats":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "hats"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"hats"}});
                 boughtItems.Where(x => x.IsProp && x.Component == 0).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Glasses":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "glasses"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"glasses"}});
                 boughtItems.Where(x => x.IsProp && x.Component == 1).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Ears":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "ears"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"ears"}});
                 boughtItems.Where(x => x.IsProp && x.Component == 2).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Watches":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "watches"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"watches"}});
                 boughtItems.Where(x => x.IsProp && x.Component == 6).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             case "Bracelets":
-                list.Add(new ClientNativeMenuItem("Leer", false, "Server:Wardrobe:SelectClothingEmpty", "bracelets"));
+                list.Add(new ClientNativeMenuItem("Leer") {CallbackEvent = "Server:Wardrobe:SelectClothingEmpty", CallbackArgs = new object[]{"bracelets"}});
                 boughtItems.Where(x => x.IsProp && x.Component == 7).ToList().ForEach(item =>
                 {
-                    list.Add(new ClientNativeMenuItem(item.Name, false, "Server:Wardrobe:SelectClothing", item.Id));
+                    list.Add(new ClientNativeMenuItem(item.Name) {CallbackEvent = "Server:Wardrobe:SelectClothing", CallbackArgs = new object[] {item.Id}});
                 });
                 break;
             default: break;
@@ -343,8 +360,8 @@ public class WardrobeModule : Module<WardrobeModule>, IEventColshape
 
         var items = new List<ClientNativeMenuItem>
         {
-            new("Outfit anziehen", true, "Server:Wardrobe:SelectOutfit", outfit.Id),
-            new("Outfit löschen", true, "Server:Wardrobe:DeleteOutfit", outfit.Id)
+            new("Outfit anziehen") { Close = true, CallbackEvent = "Server:Wardrobe:SelectOutfit", CallbackArgs = new object[] {outfit.Id}},
+            new("Outfit löschen") {Close = true, CallbackEvent = "Server:Wardrobe:DeleteOutfit", CallbackArgs = new object[] {outfit.Id}}
         };
 
         var menu = new ClientNativeMenu(outfit.Name, items);

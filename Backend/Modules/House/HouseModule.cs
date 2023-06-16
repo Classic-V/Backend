@@ -63,7 +63,7 @@ public class HouseModule : Module<HouseModule>, IEventColshape
 
         var list = new List<ClientNativeMenuItem>
         {
-            new("Haus betreten", true, "Server:House:Enter", id)
+            new ClientNativeMenuItem("Haus betreten") { Close = true, CallbackEvent = "Server:House:Enter",  CallbackArgs = new object[] { id } },
         };
 
         var menu = new ClientNativeMenu($"Haus ({id})", list);

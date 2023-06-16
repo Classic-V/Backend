@@ -82,7 +82,10 @@ namespace Backend.Modules.VehicleShop
 
 			var items = new List<ClientNativeMenuItem>();
 			for (var i = 0; i < model.Vehicles.Count; i++)
-				items.Add(new($"{model.Vehicles[i].VehicleInfo.Name} ${model.Vehicles[i].Price}", true, "Server:VehicleShop:Buy", model.Id, i));
+				items.Add(new($"{model.Vehicles[i].VehicleInfo.Name} ${model.Vehicles[i].Price}")
+				{
+					Close = true, CallbackEvent = "Server:VehicleShop:Buy", CallbackArgs = new object[] { model.Id, i }
+				});
 
 			await player.ShowNativeMenu(true, new ClientNativeMenu("Fahrzeug Händler", items));
 		}
