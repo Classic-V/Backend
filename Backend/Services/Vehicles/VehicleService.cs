@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AltV.Net;
 using AltV.Net.Elements.Entities;
 using Backend.Services.Vehicles.Interface;
 using Backend.Utils;
@@ -36,6 +37,11 @@ namespace Backend.Services.Vehicles
         public Task<VehicleInfoModel?> GetVehicleInfo(int id)
         {
             return Task.FromResult(VehicleInfos.FirstOrDefault(x => x.Id == id));
+        }
+        
+        public Task<VehicleInfoModel?> GetVehicleInfo(string model)
+        {
+            return Task.FromResult(VehicleInfos.FirstOrDefault(x => x.Hash == Alt.Hash(model)));
         }
 
 		public async Task AddVehicle(VehicleModel vehicle)

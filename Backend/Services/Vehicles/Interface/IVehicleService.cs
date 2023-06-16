@@ -8,6 +8,7 @@ namespace Backend.Services.Vehicles.Interface
         List<VehicleInfoModel> VehicleInfos { get; }
         Task AddVehicleInfo(VehicleInfoModel model);
         Task<VehicleInfoModel?> GetVehicleInfo(int id);
+        Task<VehicleInfoModel?> GetVehicleInfo(string model);
 		Task AddVehicle(VehicleModel vehicle);
         Task<VehicleModel?> GetVehicle(int id);
         Task DeleteVehicle(int id);
