@@ -13,7 +13,6 @@ public class AnimationModelConfiguration : IEntityTypeConfiguration<AnimationMod
         builder.HasIndex(x => x.Id).HasDatabaseName("id");
         builder.Property(x => x.Id).HasColumnName("id").HasColumnType("int(11)");
         builder.Property(x => x.Name).HasColumnName("name").HasColumnType("varchar(255)");
-        builder.Property(x => x.Category).HasColumnName("category").HasColumnType("int(11)");
         builder.Property(x => x.AnimationDictionary).HasColumnName("anim_dict").HasColumnType("varchar(255)");
         builder.Property(x => x.AnimationName).HasColumnName("anim_name").HasColumnType("varchar(255)");
         builder.Property(x => x.AnimationFlag).HasColumnName("anim_flag").HasColumnType("int(11)");

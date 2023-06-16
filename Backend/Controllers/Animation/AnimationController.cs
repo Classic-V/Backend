@@ -23,9 +23,4 @@ public class AnimationController : IAnimationController
     {
         return await _animationService.GetAnimation(id);
     }
-
-    public async Task<List<AnimationModel>> GetAnimationCategory(AnimationCategoryType type)
-    {
-        return await _animationService.GetAnimationCategory(type);
-    }
 }

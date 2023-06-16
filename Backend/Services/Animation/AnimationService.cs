@@ -19,11 +19,6 @@ public class AnimationService : IAnimationService
         return Task.FromResult(Animations.FirstOrDefault(x => x.Id == id))!;
     }
 
-    public Task<List<AnimationModel>> GetAnimationCategory(AnimationCategoryType category)
-    {
-        return Task.FromResult(Animations.Where(x => x.Category == category).ToList());
-    }
-
     public async Task AddAnimation(AnimationModel model)
     {
         Animations.Add(model);
